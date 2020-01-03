@@ -20,10 +20,42 @@ see under the methods section
  * @param {allCarStats.ratioHybrids} ratio of cars that are hybrids
  */
 export const allCarStats = {
-    avgMpg: undefined,
-    allYearStats: undefined,
-    ratioHybrids: undefined,
+    avgMpg: mpg(mpg_data),
+    allYearStats: yearStat(),
+    ratioHybrids: rHybrids(),
 };
+
+export function mpg(mpgData) {
+    let mpg = new Object(), city_sum = 0, highway_sum = 0;
+    for (let i = 0; i < mpgData.length; i++) {
+        city_sum += mpgData[i]['city_mpg'];
+        highway_sum += mpgData[i]['highway_mpg'];
+    }
+    mpg['city'] = city_sum / mpgData.length;
+    mpg['highway'] = highway_sum / mpgData.length;
+    return mpg;
+
+}
+
+export function yearStat() {
+    let year = [];
+    for (let i = 0; i < mpg_data.length; i++) {
+        year[i] = mpg_data[i]['year'];
+    }
+    return getStatistics(year);
+}
+
+export function rHybrids() {
+    let hybrid_sum = 0;
+    for (let i = 0; i < mpg_data.length; i++) {
+        if (mpg_data[i]['hybrid']) {
+            hybrid_sum++;
+        }
+    }
+    return hybrid_sum / mpg_data.length;
+}
+
+
 
 
 /**
@@ -84,6 +116,90 @@ export const allCarStats = {
  * }
  */
 export const moreStats = {
-    makerHybrids: undefined,
-    avgMpgByYearAndHybrid: undefined
+    makerHybrids: hybridMakes(),
+    avgMpgByYearAndHybrid: yearHybridMpg()
 };
+
+export function hybridMakes() {
+    let makes = [];
+    let mpg_hybrids = JSON.parse(JSON.stringify(mpg_data));
+    mpg_hybrids = mpg_hybrids.filter(a => a['hybrid']);
+    for (let i = 0; i < mpg_hybrids.length; i++) {
+        if (makes.length == 0) {
+            makes[0] = {make: mpg_hybrids[i]['make'], hybrids: [mpg_hybrids[i]['id']]};
+        } else {
+            for (let j = 0; j < makes.length; j++) {
+                if (makes[j]['make'] == mpg_hybrids[i]['make']) {
+                    makes[j]['hybrids'][makes[j]['hybrids'].length] = mpg_hybrids[i]['id'];
+                    break;
+                } else if (j == makes.length - 1) {
+                    makes[makes.length] = {make: mpg_hybrids[i]['make'], hybrids: [mpg_hybrids[i]['id']]};
+                    break;
+                }
+            }
+        }
+    }
+    let sortHelp = [];
+    for (let i = 0; i < makes.length; i++) {
+        sortHelp[i] = makes[i]['hybrids'].length;
+    }
+    sortHelp.sort(function(a,b) {
+        return b - a;
+    });
+
+    let makesSorted = [];
+    for (let i = 0; i < sortHelp.length; i ++) {
+        for (let j = 0; j < makes.length; j ++) {
+            if (i == 0 && makes[j]['hybrids'].length == sortHelp[i]) {
+                makesSorted[i] = JSON.parse(JSON.stringify(makes[j]));
+                makes[j]['hybrids'] = [];
+                break;
+            } else if (makes[j]['hybrids'].length == sortHelp[i]) {
+                makesSorted[i] = JSON.parse(JSON.stringify(makes[j]));
+                makes[j]['hybrids'] = [];
+                break;
+            }
+        }
+    }
+    //console.log(sortHelp);
+    //console.log(makesSorted);
+    return makesSorted;
+}
+
+export function yearHybridMpg() {
+    let yearsChecked = [], yearMpg = new Object();
+    for (let i = 0; i < mpg_data.length; i++) {
+        let thisYear = mpg_data[i]['year'];
+        if (yearsChecked.length == 0) {
+            yearMpg[thisYear] = getYearMpg(thisYear);
+            yearsChecked[0] = thisYear;
+            continue;
+        }
+        for (let j = 0; j < yearsChecked.length; j++) {
+            if (thisYear == yearsChecked[j]) {
+                break;
+            } else if (j == yearsChecked.length - 1) {
+                yearMpg[thisYear] = getYearMpg(thisYear);
+                yearsChecked[yearsChecked.length] = thisYear;
+            }
+        }
+        
+    }
+    return yearMpg;
+}
+
+export function getYearMpg(checkYear) {
+    let copy_mpg_data = JSON.parse(JSON.stringify(mpg_data));
+    let thisYear = copy_mpg_data.filter(a => a['year'] == checkYear);
+    let thisYearCopy = JSON.parse(JSON.stringify(thisYear));
+    let thisYearHybrid = thisYear.filter(b => b['hybrid'] == true);
+    let thisYearNonHybrid = thisYearCopy.filter(c => c['hybrid'] == false);
+    let hybrids = mpg(thisYearHybrid);
+    let non_hybrid = mpg(thisYearNonHybrid);
+
+    let year_mpg = {'hybrid': hybrids, 'notHybrid': non_hybrid};
+    return year_mpg;
+
+}
+
+//console.log(moreStats);

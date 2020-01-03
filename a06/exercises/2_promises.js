@@ -30,6 +30,24 @@ export function getHeroByIdPromise(heroData, id) {
   // 4. After 1.5 seconds, either execute the resolve() callback passing in the
   //    found hero as a parameter, or execute the reject() callback if no hero
   //    was found.
+
+  return new Promise((resolve, reject) => {
+    let index = -1;
+    for (let i = 0; i < heroData.length; i++) {
+      if (heroData[i].id == id) {
+        index = i;
+        break;
+      }
+    }
+
+    setTimeout(() => {
+      if (index == -1) {
+        reject(`Hero not found`);
+      } else {
+        resolve(heroData[index]);
+      }
+    }, 1500);
+  });
 }
 
 

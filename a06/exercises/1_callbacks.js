@@ -22,12 +22,23 @@ import { heroData } from "./data";
  */
 export function getHeroByIdCallback(heroData, id, callback) {
   // 1. Find the hero with the correct id in the heroData array
+  let index = -1;
+  for (let i = 0; i < heroData.length; i++) {
+    if (heroData[i].id == id) {
+      index = i;
+      break;
+    }
+  }
 
   // 2. Use setTimeout() to execute code after 1.5 seconds. See the assignment
   //    write-up for instructions of how to use setTimeout().
 
   // 3. After 1.5 seconds, execute the callback() function, passing in the hero
   //    with the correct id as a parameter to the function.
+
+  setTimeout(() => {
+    callback(heroData[index]);
+  }, 1500);
 }
 
 

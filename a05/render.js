@@ -16,6 +16,16 @@
  */
 export const renderHeroCard = function(hero) {
     // TODO: Copy your code from a04 to render the hero card
+    let e = `<div id=${hero.id}><p style="color: ${hero.color}">${hero.name}</p>
+            <img src=${hero.img}></img>
+            <div style="background: ${hero.backgroundColor}"<p>Alter Ego: ${hero.first} ${hero.last}</p>
+            <span>${hero.description}</span></div>
+            <span>First Seen: ${hero.firstSeen}</span>
+            <button type="button" class="editButton">Edit</button></div>`;
+
+    $("button.editButton").on('click', handleEditButtonPress);
+    e = $.parseHTML(e);
+    return e;
 };
 
 
@@ -28,7 +38,18 @@ export const renderHeroCard = function(hero) {
  */
 export const renderHeroEditForm = function(hero) {
     // TODO: Copy your code from a04 to render the hero edit form
-};
+    let e = `<form id=${hero.id}>
+                Hero Name: <input type="text" id="name" value=${hero.name}>
+                First Name: <input type="text" id="firstName" value=${hero.first}>
+                Last Name: <input type="text" id="lastName" value=${hero.last}>
+                Description: <textarea rows="5" cols="50" id="desc">${hero.description}</textarea>
+                First Seen: <textarea rows="1" cols="100" id="date">${hero.firstSeen}</textarea>
+                <button type="submit" class="submitButton">Save</button>
+                <button type="button" class="cancelButton">Cancel</button>
+            </form>`;
+    e = $.parseHTML(e);
+    return e;
+}; 
 
 
 
@@ -40,6 +61,18 @@ export const renderHeroEditForm = function(hero) {
 export const handleEditButtonPress = function(event) {
     // TODO: Render the hero edit form for the clicked hero and replace the
     //       hero's card in the DOM with their edit form instead
+    let tar = event.target;
+    let id = tar.parentNode.id, hero = heroicData[0];
+    for (let i = 0; i < heroicData.length; i++) {
+        if (heroicData[i].id == id) {
+            hero = heroicData[i];
+            break;
+        }
+    }
+    let e = renderHeroEditForm(hero);
+    $('#'+id).replaceWith(e);
+    $("button.submitButton").on('click', handleEditFormSubmit);
+    $("button.cancelButton").on('click', handleCancelButtonPress);
 };
 
 
@@ -52,6 +85,17 @@ export const handleEditButtonPress = function(event) {
 export const handleCancelButtonPress = function(event) {
     // TODO: Render the hero card for the clicked hero and replace the
     //       hero's edit form in the DOM with their card instead
+    let tar = event.target;
+    let id = tar.parentNode.id, hero = heroicData[0];
+    for (let i = 0; i < heroicData.length; i++) {
+        if (heroicData[i].id == id) {
+            hero = heroicData[i];
+            break;
+        }
+    }
+    let e = renderHeroCard(hero);
+    $('#'+id).replaceWith(e);
+    $("button.editButton").on('click', handleEditButtonPress);
 };
 
 
@@ -65,6 +109,35 @@ export const handleEditFormSubmit = function(event) {
     // TODO: Render the hero card using the updated field values from the
     //       submitted form and replace the hero's edit form in the DOM with
     //       their updated card instead
+    event.preventDefault();
+    let tar = event.target;
+    let id = tar.parentNode.id, index = 0;
+    for (let i = 0; i < heroicData.length; i++) {
+        if (heroicData[i].id == id) {
+            index = i;
+            break;
+        }
+    }
+    let newName = $('#name').val();
+    let newFirstName = $('#firstName').val();
+    let newLastName = $('#lastName').val();
+    let newDescription = $('#desc').val();
+    let newDate = $('#date').val();
+    newDate = new Date(newDate);
+    newDate = newDate.toUTCString();
+    newDate = new Date(newDate);
+    //((new Date(newDate)).getTime() + Math.abs((new Date(newDate)).getTimezoneOffset()*60000))
+    heroicData[index].name = newName;
+    heroicData[index].first = newFirstName;
+    heroicData[index].last = newLastName;
+    heroicData[index].description = newDescription;
+    heroicData[index].firstSeen = newDate;
+
+    let e = renderHeroCard(heroicData[index]);
+    $('#'+id).replaceWith(e);
+    $("button.editButton").on('click', handleEditButtonPress);
+
+
 };
 
 
@@ -80,6 +153,10 @@ export const loadHeroesIntoDOM = function(heroes) {
 
     // TODO: Generate the heroes using renderHeroCard()
     //       NOTE: Copy your code from a04 for this part
+    for (let i = 0; i < heroes.length; i++) {
+        let e = renderHeroCard(heroes[i]);
+        $root.append(e);
+    }
 
     // TODO: Append the hero cards to the $root element
     //       NOTE: Copy your code from a04 for this part

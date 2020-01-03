@@ -1,0 +1,31 @@
+p {
+    color: #1F2F3F;
+    font-family:'Times New Roman', Times, serif;
+}
+span {
+    font-family:Arial, Helvetica, sans-serif;
+}
+body {
+    background-color:#5e5e5e;
+}
+p.hi {
+    width:10cm;
+}
+a:hover {
+    background-color:red;
+}
+p.glorpup {
+    border:thick;
+}
+#freldan {
+    color:purple;
+}
+div > p {
+    background-blend-mode: color;
+}
+span > p {
+    background-color: red;
+}
+a > p {
+    color:green;
+}

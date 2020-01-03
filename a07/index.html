@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+
+        <title>2048</title>
+        <link rel="stylesheet" href="node_modules/bulma/css/bulma.css"/>
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+
+    <body>
+
+        <div class="hero">
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-centered">2048</h1>
+                </div>
+            </div>
+        </div>
+        <div class="has-text-centered"> 
+            <button id="b" type="button" class="editButton button is-dark">Start New game</button>
+        </div>       
+        <div id="root"></div>
+
+        <script src="node_modules/jquery/dist/jquery.js"?></script>
+        <script src="./engine/game.js" type="module"></script>
+        <script src="render.js" type="module"></script>
+    </body>
+</html>

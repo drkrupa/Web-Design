@@ -1,0 +1,15 @@
+.box {
+    height: 70px;
+}
+
+html, body {
+    background-color: lightgray;
+}
+
+h1 {
+    font-size: 2.8em !important;
+}
+
+p.title {
+    font-size: 175%;
+}

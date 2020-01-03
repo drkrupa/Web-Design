@@ -19,6 +19,23 @@ import { heroData } from "./data";
  */
 export function getHeroByIdAsync(heroData, id) {
   // Copy-and-paste code here
+  return new Promise((resolve, reject) => {
+    let index = -1;
+    for (let i = 0; i < heroData.length; i++) {
+      if (heroData[i].id == id) {
+        index = i;
+        break;
+      }
+    }
+
+    setTimeout(() => {
+      if (index == -1) {
+        reject(`Hero not found`);
+      } else {
+        resolve(heroData[index]);
+      }
+    }, 1500);
+  });
 }
 
 

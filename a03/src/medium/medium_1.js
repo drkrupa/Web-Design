@@ -9,7 +9,12 @@ import {variance} from "./data/stats_helpers";
  * prototype functions. Very useful
  */
 export function getSum(array) {
-
+    var sum = 0;
+    for (let i = 0; i < array.length; i++) {
+        sum += array[i];
+    }
+    return sum;
+    
 }
 
 
@@ -23,7 +28,12 @@ export function getSum(array) {
  * console.log(getMedian(array)); // 4.5
  */
 export function getMedian(array) {
-
+    mergeSort(array);
+    if (array.length % 2 == 0) {
+        return ((array[array.length / 2] + array[(array.length/ 2) - 1]) / 2);
+    } else {
+        return array[((array.length - 1) / 2)];
+    }
 }
 
 /**
@@ -46,6 +56,50 @@ export function getMedian(array) {
  }
  */
 export function getStatistics(array) {
+    var stat = new Object();
+    stat['length'] = array.length;
+    stat['sum'] = getSum(array);
+    stat['median'] = getMedian(array);
+    stat['min'] = array[0];
+    stat['max'] = array[array.length - 1];
+    let mean = stat['sum'] / array.length;
+    stat['mean'] = mean;
+    stat['variance'] = variance(array, mean);
+    stat['standard_deviation'] = Math.sqrt(stat['variance']);
+
+    return stat;
 
 }
+
+
+export function mergeSort(array) {
+    if (array.length == 1) {
+        return array;
+    } 
+    var mid = Math.floor(array.length / 2);
+    var left = array.slice(0, mid);
+    var right = array.slice(mid);
+
+    return merge(mergeSort(left), mergeSort(right));
+}
+
+export function merge(left, right){
+    var result = [], leftIndex = 0, rightIndex = 0;
+    while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex] < right[rightIndex]) {
+            result.push(left[leftIndex]);
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            rightIndex++;
+        }
+    }
+    if (leftIndex < left.length) {
+        result.push(left[leftIndex]);
+    } else {
+        result.push(right[rightIndex]);
+    }
+    return result;
+}
+
 
