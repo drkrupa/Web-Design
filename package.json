@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bestzip": "^2.1.4",
     "browser-sync": "^2.26.7",
     "chalk": "^2.4.2",
